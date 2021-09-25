@@ -1,38 +1,37 @@
-.App {
-  text-align: center;
+@import url('https://fonts.googleapis.com/css2?family=Glory:ital,wght@0,100;0,300;0,500;0,700;1,100;1,300;1,500;1,700&family=Open+Sans:ital,wght@0,300;0,400;0,600;0,800;1,300;1,400;1,600;1,800&family=Roboto:ital,wght@0,100;0,300;0,500;0,700;1,100;1,300;1,500;1,700&family=Urbanist:ital,wght@0,100;0,300;0,500;0,700;1,100;1,300;1,500;1,700&display=swap');
+/*
+font-family: 'Glory', sans-serif;
+font-family: 'Open Sans', sans-serif;
+font-family: 'Roboto', sans-serif;
+font-family: 'Urbanist', sans-serif;
+*/
+
+body {
+  background: #BBD2C5;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #536976, #BBD2C5);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #536976, #BBD2C5); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+header {
+  min-height: 50px;
+  background-color: rgb(0 0 0 / 50%);
+  font-family: 'Urbanist', 'Glory', 'Open Sans', 'Roboto', sans-serif;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.loginSignupForms {
+  font-family: 'Glory', 'Open Sans', 'Roboto', 'Urbanist', sans-serif;
+}
+.loginSignupForms h1 {
+  text-shadow: -2px 2px 2px rgb(255 255 255 / 50%);
+  font-weight: 500;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+footer {
+  font-family: 'Urbanist', 'Glory', 'Open Sans', 'Roboto', sans-serif;
+  background-color: rgb(0 0 0 / 50%);
+  min-height: 40px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 }
