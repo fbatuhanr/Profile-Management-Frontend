@@ -5,7 +5,7 @@ import React from 'react'
         <div className="container">
             <div className="row justify-content-center">
                 <div className="col-11 col-md-6 loginSignupForms mt-4">
-                    <h1 className="display-5 text-center mt-1 mb-3 mb-md-4 pb-1 text-uppercase">Profile Management</h1>
+                    <h1 className="display-5 text-center pb-1 mt-1 mb-3 mb-md-4 text-uppercase">Profile Management</h1>
                     <div className="form-container">
                         <nav className="fs-5">
                             <div className="nav nav-tabs" id="nav-tab" role="tablist">
