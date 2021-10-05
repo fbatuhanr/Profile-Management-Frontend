@@ -1,6 +1,9 @@
 import React, {useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 const Login = () => {
+
+    const dispatch = useDispatch();
 
     const [loginForm, setLoginForm] = useState({
         loginEmail: "",
@@ -23,15 +26,22 @@ const Login = () => {
         console.log(loginForm.loginPassword);
         console.log(loginForm.rememberMe);
 
-        // const {loginEmail, loginPassword, rememberMe} = loginForm;
-        // const formValues = {
-        //     loginEmail, loginPassword, rememberMe
-        //     // loginEmail: loginEmail,
-        //     // loginPassword: loginPassword,
-        //     // rememberMe: rememberMe
-        // }
+        const {loginEmail, loginPassword, rememberMe} = loginForm;
+        const loginFormValues = {
+            loginEmail, loginPassword, rememberMe
+            // loginEmail: loginEmail,
+            // loginPassword: loginPassword,
+            // rememberMe: rememberMe
+        }
+
+        // if user check exist:
+        const storageValues = {
+            isLoggedIn: true,
+            loginEmail, rememberMe
+        }
 
         // dispatch({type: "CHECK_USER", payload: formValues});
+        dispatch({type: "LOG_IN", payload: storageValues});
     }
 
     return (

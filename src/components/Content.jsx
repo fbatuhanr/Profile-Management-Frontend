@@ -15,10 +15,10 @@ import React from 'react'
                         </nav>
                         <div className="tab-content bg-white p-3 pt-4 pb-4 border border-top-0 rounded-bottom" id="nav-tabContent">
                             <div className="tab-pane fade show active" id="nav-login" role="tabpanel" aria-labelledby="nav-login-tab">
-                                {children[0]}
+                                {children[0] ? children[0] : null}
                             </div>
                             <div className="tab-pane fade" id="nav-signup" role="tabpanel" aria-labelledby="nav-signup-tab">
-                                {children[1]}
+                                {children[1] ? children[1] : null}
                             </div>
                         </div>
                     </div>

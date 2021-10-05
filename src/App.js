@@ -12,14 +12,25 @@ import Signup from './components/Signup';
 
 import Footer from './components/Footer';
 
+import {useSelector} from 'react-redux';
+import {login} from './actions'
+
 function App() {
+
+  const userInfo = useSelector(state => state.user_info);
+
+  console.log(userInfo)
   return (
     <div id="main">
       <Header />
-        <Content>
-          <Login />
-          <Signup />
-        </Content>
+        {
+          !userInfo.isLoggedIn ?
+          <Content>
+            <Login />
+            <Signup />
+          </Content>
+          : null
+        }
       <Footer/>
     </div>
   );
