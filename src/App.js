@@ -12,8 +12,17 @@ import Signup from './components/Signup';
 
 import Footer from './components/Footer';
 
+import About from './components/About';
+
 import {useSelector} from 'react-redux';
 import {login} from './actions'
+
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 
 function App() {
 
@@ -21,18 +30,23 @@ function App() {
 
   console.log(userInfo)
   return (
-    <div id="main">
-      <Header />
-        {
-          !userInfo.isLoggedIn ?
-          <Content>
-            <Login />
-            <Signup />
-          </Content>
-          : null
-        }
-      <Footer/>
-    </div>
+    <Router>
+      <div id="main">
+        <Header />
+          <Switch>
+            <Route path="/" exact>
+              { !userInfo.isLoggedIn ?
+                <Content>
+                  <Login />
+                  <Signup />
+                </Content>
+                : "empty" }
+            </Route>
+            <Route path="/about" component={About} />
+          </Switch>
+        <Footer/>
+      </div>
+    </Router>
   );
 }
 
