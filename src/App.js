@@ -6,9 +6,8 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 
 import Header from './components/Header';
 import Content from './components/Content';
-
-import Login from './components/Login';
-import Signup from './components/Signup';
+import LoginSignupForms from './components/LoginSignupForms';
+import Profile from './components/Profile';
 
 import Footer from './components/Footer';
 
@@ -31,21 +30,17 @@ function App() {
   console.log(userInfo)
   return (
     <Router>
-      <div id="main">
-        <Header />
-          <Switch>
-            <Route path="/" exact>
-              { !userInfo.isLoggedIn ?
-                <Content>
-                  <Login />
-                  <Signup />
-                </Content>
-                : "empty" }
-            </Route>
-            <Route path="/about" component={About} />
-          </Switch>
-        <Footer/>
-      </div>
+      <Header />
+      <Content>
+        <Switch>
+          <Route path="/" exact>
+            { !userInfo.isLoggedIn ? <LoginSignupForms/> : <Profile/> }
+          </Route>
+          <Route path="/about" component={About} />
+          <Route path="/profile" component={Profile} />
+        </Switch>
+      </Content>
+      <Footer/>
     </Router>
   );
 }
