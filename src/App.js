@@ -26,8 +26,9 @@ import {
 function App() {
 
   const userInfo = useSelector(state => state.user_info);
+  const allInfo = useSelector(state => state);
 
-  console.log(userInfo)
+  console.log(allInfo);
   return (
     <Router>
       <Header />

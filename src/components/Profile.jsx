@@ -1,10 +1,13 @@
 import React, {useState} from 'react';
-import PhoneInput from 'react-phone-input-2'
+import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
+import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
+
+import {useDispatch} from 'react-redux';
 
 const Profile = () => {
 
-    const [phoneNumber, setPhoneNumber] = useState(null);
+    const dispatch = useDispatch();
 
     const [profileForm, setProfileForm] = useState({
         name: "",
@@ -13,16 +16,35 @@ const Profile = () => {
         education: "",
         country: "",
         state: "",
+
+        hobbies: ""
     });
+
+    const changeProfileForm = (e) => setProfileForm({...profileForm, [e.target.name]: e.target.value});
+    const changePhoneNumber = (val) => setProfileForm({...profileForm, "phoneNumber": val});
+    const changeHobbies = (val) => setProfileForm({...profileForm, "hobbies": val});
+    
+    const profileFormSubmit = (e) => {
+        e.preventDefault();
+
+        console.log(profileForm);
+
+        const {name, surname, phoneNumber, education, country, state, hobbies} = profileForm;
+
+        
+        //dispatch({type: "PROFILE_UPDATE", payload: profileForm});
+    }
 
     return (
        <div className="profile rounded bg-white mt-3 mb-3">
+
+       <form id="profileForm" onSubmit={profileFormSubmit} method="POST">
            <div className="row">
 
                 <div className="col-md-3 border-end">
                     <div className="d-flex flex-column align-items-center text-center p-3 py-5">
                         <div className="profile-photo display-1">
-                           <i class="bi bi-person"></i>
+                           <i className="bi bi-person"></i>
                         </div>
                         <span className="font-weight-bold">XXX</span>
                         <span className="text-black-50">edogaru@mail.com.my</span>
@@ -41,12 +63,17 @@ const Profile = () => {
                                 <label className="labels">Name</label>
                                 <input type="text" className="form-control" placeholder="Type your name..." 
                                     name="name"
-                                    value="" 
+                                    value={profileForm.name} 
+                                    onChange={changeProfileForm}
                                 />
                             </div>
                             <div className="col-md-6">
                                 <label className="labels">Surname</label>
-                                <input type="text" className="form-control" value="" placeholder="Type your surname..." />
+                                <input type="text" className="form-control" placeholder="Type your surname..." 
+                                    name="surname"
+                                    value={profileForm.surname} 
+                                    onChange={changeProfileForm}
+                                />
                             </div>
                         </div>
                         <div className="row mt-3">
@@ -58,19 +85,24 @@ const Profile = () => {
                                         required: true,
                                         autoFocus: true
                                     }}
-                                    inputClass="form-control w-100"
+                                    inputclassName="form-control w-100"
                                     placeholder="Enter a phone number..."
                                     country={'us'}
                                     preferredCountries={['us']}
-                                    value={phoneNumber}
-                                    onChange={() => setPhoneNumber(phoneNumber)}
                                     enableSearch
+                                    value={profileForm.phoneNumber} 
+                                    onChange={changePhoneNumber}
                                 />
                             </div>
                             <div className="col-md-12">
                                 <label className="labels">Education</label>
-                                <select class="form-select" aria-label="Default select example">
-                                    <option value="" selected disabled>Select your education...</option>
+                                <select className="form-select"
+                                    name="education"
+                                    value={profileForm.education} 
+                                    onChange={changeProfileForm}
+                                    defaultValue=""
+                                >
+                                    <option value="" disabled>Select your education...</option>
                                     <option value="No formal education">No formal education</option>
                                     <option value="Primary education">Primary education</option>
                                     <option value="Secondary education">Secondary education or high school</option>
@@ -85,8 +117,13 @@ const Profile = () => {
                         <div className="row mt-3">
                             <div className="col-md-6">
                                 <label className="labels">Country</label>
-                                <select className="form-select" name="country">
-                                    <option value="" selected disabled>Select your country...</option>
+                                <select className="form-select" 
+                                    name="country"
+                                    value={profileForm.country} 
+                                    onChange={changeProfileForm}
+                                    defaultValue=""
+                                >
+                                    <option value="" disabled>Select your country...</option>
                                     <option value="Afganistan">Afghanistan</option>
                                     <option value="Albania">Albania</option>
                                     <option value="Algeria">Algeria</option>
@@ -337,7 +374,11 @@ const Profile = () => {
                             </div>
                             <div className="col-md-6">
                                 <label className="labels">State/Region/City</label>
-                                <input type="text" className="form-control" value="" placeholder="Type your state, region or city..." />
+                                <input type="text" className="form-control" placeholder="Type your state, region or city..." 
+                                    name="state"                  
+                                    value={profileForm.state} 
+                                    onChange={changeProfileForm}
+                                />
                             </div>
                         </div>
                         <div className="mt-5 text-center">
@@ -348,16 +389,21 @@ const Profile = () => {
 
                 <div className="col-md-4">
                     <div className="p-3 py-5">
-                    <select class="selectpicker" multiple aria-label="size 3 select example">
-    <option value="1">One</option>
-    <option value="2">Two</option>
-    <option value="3">Three</option>
-    <option value="4">Four</option>
-  </select>
+
+                    <label className="labels">Hobbies</label>
+                    <DropdownMultiselect
+                        placeholder="Select your hobbies"
+                        options={["Reading", "Music", "Traveling", "Fishing", "Crafting", "Collecting", "Gardening", "Video Games"]}
+                        name="hobbies"
+                        handleOnChange={changeHobbies}
+                        value={profileForm.hobbies} 
+                    />
                     </div>
                 </div>
 
+
            </div>
+                </form>
        </div> 
     )
 }
