@@ -36,10 +36,15 @@ const Login = () => {
         };
         axios.post('http://localhost:3001/login', body, { headers })
         .then(response => {
+            console.log(response);
             if(response.data.isLoginSuccess) {
                 const storageValues = { isLoggedIn: true, loginEmail, rememberMe }
                 dispatch({type: "LOG_IN", payload: storageValues});
             }
+        })
+        .catch(error => {
+            console.log("err:",error);
+    
         });
     }
 
