@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import axios from 'axios';
+
 const Login = () => {
 
     const dispatch = useDispatch();
@@ -11,7 +13,7 @@ const Login = () => {
         rememberMe: false
     })
 
-    const inputChange = (e) => {
+    const inputChange = e => {
         //console.log(e.target.name + ' ve ' + e.target.value);
         setLoginForm({
             ...loginForm,
@@ -19,29 +21,26 @@ const Login = () => {
         })
     }
 
-    const loginFormSubmit = (e) => {
+    const loginFormSubmit = e => {
         e.preventDefault();
 
-        console.log(loginForm.loginEmail);
-        console.log(loginForm.loginPassword);
-        console.log(loginForm.rememberMe);
-
         const {loginEmail, loginPassword, rememberMe} = loginForm;
-        const loginFormValues = {
-            loginEmail, loginPassword, rememberMe
-            // loginEmail: loginEmail,
-            // loginPassword: loginPassword,
-            // rememberMe: rememberMe
-        }
 
-        // if user check exist:
-        const storageValues = {
-            isLoggedIn: true,
-            loginEmail, rememberMe
-        }
 
-        // dispatch({type: "CHECK_USER", payload: formValues});
-        dispatch({type: "LOG_IN", payload: storageValues});
+        const body = {
+            "user": loginEmail,
+            "password": loginPassword
+        };
+        const headers = { 
+            'Content-Type': 'application/json'
+        };
+        axios.post('http://localhost:3001/login', body, { headers })
+        .then(response => {
+            if(response.data.isLoginSuccess) {
+                const storageValues = { isLoggedIn: true, loginEmail, rememberMe }
+                dispatch({type: "LOG_IN", payload: storageValues});
+            }
+        });
     }
 
     return (
