@@ -12,6 +12,7 @@ import Profile from './components/Profile';
 import Footer from './components/Footer';
 
 import About from './components/About';
+import Users from './components/Users';
 
 import {useSelector} from 'react-redux';
 import {login} from './actions'
@@ -38,6 +39,7 @@ function App() {
             { !userInfo.isLoggedIn ? <LoginSignupForms/> : <Profile/> }
           </Route>
           <Route path="/about" component={About} />
+          <Route path="/users" component={Users} />
           <Route path="/profile" component={Profile} />
         </Switch>
       </Content>

@@ -12,7 +12,7 @@ const Header = () => {
             <nav className="navbar navbar-expand-lg navbar-dark">
                 <div className="container-fluid">
                     <Link to="/" className="navbar-brand fs-4">Profile Management</Link>
-                    <div className="display-flex w-100 justify-content-center">
+                    <div className="w-50 justify-content-center">
                     <span className="text-info">Welcome!</span> &nbsp;<i className="bi bi-person-fill"></i>
                     {
                         userInfo.isLoggedIn 

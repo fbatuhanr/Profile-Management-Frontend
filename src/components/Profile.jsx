@@ -85,7 +85,7 @@ const Profile = () => {
                                         required: true,
                                         autoFocus: true
                                     }}
-                                    inputclassName="form-control w-100"
+                                    inputClass="form-control w-100"
                                     placeholder="Enter a phone number..."
                                     country={'us'}
                                     preferredCountries={['us']}
