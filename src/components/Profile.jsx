@@ -11,6 +11,8 @@ const Profile = () => {
 
     const userInfo = useSelector(state => state.user_info);
 
+    const [isHobbiesFetched, setIsHobbiesFetched] = useState(false);
+
     const dispatch = useDispatch();
 
     const [profileForm, setProfileForm] = useState({
@@ -36,6 +38,7 @@ const Profile = () => {
                 ...profileForm,
                 name, surname, phoneNumber, education, country, state, hobbies
             });
+            setIsHobbiesFetched(true);
 
         })
         .catch(error => {
@@ -436,7 +439,7 @@ const Profile = () => {
                     <div className="p-3 py-5">
 
                     <label className="labels">Hobbies</label>
-                    { profileForm.hobbies != [] && <DropdownMultiselect
+                    { isHobbiesFetched && <DropdownMultiselect
                         placeholder="Select your hobbies"
                         options={["Reading", "Music", "Traveling", "Fishing", "Crafting", "Collecting", "Gardening", "Video Games"]}
                         name="hobbies"
