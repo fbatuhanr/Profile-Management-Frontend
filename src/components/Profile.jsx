@@ -1,11 +1,15 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 
-import {useDispatch} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
+
+import axios from 'axios';
 
 const Profile = () => {
+
+    const userInfo = useSelector(state => state.user_info);
 
     const dispatch = useDispatch();
 
@@ -17,8 +21,26 @@ const Profile = () => {
         country: "",
         state: "",
 
-        hobbies: ""
+        hobbies: []
     });
+
+    
+    useEffect(() => {
+
+        axios.get('http://localhost:3001/profile-form', { params: { email: userInfo.loginEmail } })
+        .then(response => {
+            console.log("axios get!:", response)
+
+            const {name, surname, phoneNumber, education, country, state, hobbies} = response.data;
+            setProfileForm({
+                ...profileForm,
+                name, surname, phoneNumber, education, country, state, hobbies
+            });
+        })
+        .catch(error => {
+            console.error('There was an error!', error);
+        });
+    }, [profileForm]);
 
     const changeProfileForm = (e) => setProfileForm({...profileForm, [e.target.name]: e.target.value});
     const changePhoneNumber = (val) => setProfileForm({...profileForm, "phoneNumber": val});
@@ -33,6 +55,28 @@ const Profile = () => {
 
         
         //dispatch({type: "PROFILE_UPDATE", payload: profileForm});
+
+        const body = {
+            "email": userInfo.loginEmail,
+            "name": name,
+            "surname": surname,
+            "phoneNumber": phoneNumber,
+            "education": education,
+            "country": country,
+            "state": state,
+            "hobbies": hobbies
+        };
+        const headers = { 
+            'Content-Type': 'application/json'
+        };
+        axios.post('http://localhost:3001/profile-form', body, { headers })
+        .then(response => {
+            console.log(response);
+        })
+        .catch(error => {
+            console.log("err:",error);
+    
+        });
     }
 
     return (
@@ -382,7 +426,7 @@ const Profile = () => {
                             </div>
                         </div>
                         <div className="mt-5 text-center">
-                            <button className="btn btn-primary profile-button" type="button">Save Profile</button>
+                            <button className="btn btn-primary profile-button" type="submit">Save Profile</button>
                         </div>
                     </div>
                 </div>
@@ -392,9 +436,11 @@ const Profile = () => {
 
                     <label className="labels">Hobbies</label>
                     <DropdownMultiselect
+                        selected={profileForm.hobbies}
                         placeholder="Select your hobbies"
                         options={["Reading", "Music", "Traveling", "Fishing", "Crafting", "Collecting", "Gardening", "Video Games"]}
                         name="hobbies"
+                        selected={profileForm.hobbies}
                         handleOnChange={changeHobbies}
                         value={profileForm.hobbies} 
                     />
