@@ -36,11 +36,12 @@ const Profile = () => {
                 ...profileForm,
                 name, surname, phoneNumber, education, country, state, hobbies
             });
+
         })
         .catch(error => {
             console.error('There was an error!', error);
         });
-    }, [profileForm]);
+    }, []);
 
     const changeProfileForm = (e) => setProfileForm({...profileForm, [e.target.name]: e.target.value});
     const changePhoneNumber = (val) => setProfileForm({...profileForm, "phoneNumber": val});
@@ -435,18 +436,16 @@ const Profile = () => {
                     <div className="p-3 py-5">
 
                     <label className="labels">Hobbies</label>
-                    <DropdownMultiselect
-                        selected={profileForm.hobbies}
+                    { profileForm.hobbies != [] && <DropdownMultiselect
                         placeholder="Select your hobbies"
                         options={["Reading", "Music", "Traveling", "Fishing", "Crafting", "Collecting", "Gardening", "Video Games"]}
                         name="hobbies"
                         selected={profileForm.hobbies}
                         handleOnChange={changeHobbies}
                         value={profileForm.hobbies} 
-                    />
+                    /> }
                     </div>
                 </div>
-
 
            </div>
                 </form>
