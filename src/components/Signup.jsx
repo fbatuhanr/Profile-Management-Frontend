@@ -1,6 +1,11 @@
 import React, {useState} from 'react';
+import {useDispatch} from 'react-redux';
+
+import axios from 'axios';
 
 const Signup = () => {
+
+    const dispatch = useDispatch();
 
     const [signupForm, setSignupForm] = useState({
         signupEmailStart: "",
@@ -20,18 +25,39 @@ const Signup = () => {
     const signupFormSubmit = (e) => {
         e.preventDefault();
 
-        console.log(signupForm.signupEmailStart);
-        console.log(signupForm.signupEmailEnd);
-        console.log(signupForm.signupPassword);
-        console.log(signupForm.signupPasswordAgain);
+        // console.log(signupForm.signupEmailStart);
+        // console.log(signupForm.signupEmailEnd);
+        // console.log(signupForm.signupPassword);
+        // console.log(signupForm.signupPasswordAgain);
 
         if(signupForm.signupPassword != signupForm.signupPasswordAgain) {
             alert("Passwords do not match!");
             return null;
         }
         
-        let signupEmail = signupForm.signupEmailStart + '@' + signupForm.signupEmailEnd;
-        console.log(signupEmail)
+        const signupEmail = signupForm.signupEmailStart + '@' + signupForm.signupEmailEnd;
+        const signupPassword = signupForm.signupPassword;
+
+        const body = {
+            "signupEmail": signupEmail,
+            "signupPassword": signupPassword
+        };
+        const headers = { 
+            'Content-Type': 'application/json'
+        };
+        axios.post('http://localhost:3001/sign-up', body, { headers })
+        .then(response => {
+            console.log(response);
+            if(response.data.isLoginSuccess) {
+                const loginEmail = signupEmail;
+                const storageValues = { isLoggedIn: true, loginEmail }
+                dispatch({type: "LOG_IN", payload: storageValues});
+            }
+        })
+        .catch(error => {
+            console.log("err:",error);
+    
+        });
     }
 
     return (
