@@ -16,6 +16,7 @@ const Profile = () => {
     const dispatch = useDispatch();
 
     const [profileForm, setProfileForm] = useState({
+        email: "",
         name: "",
         surname: "",
         phoneNumber: "",
@@ -33,10 +34,11 @@ const Profile = () => {
         .then(response => {
             console.log("axios get!:", response)
 
-            const {name, surname, phoneNumber, education, country, state, hobbies} = response.data;
+            const {email, name, surname, phoneNumber, education, country, state, hobbies} = response.data;
+
             setProfileForm({
                 ...profileForm,
-                name, surname, phoneNumber, education, country, state, hobbies
+                email, name, surname, phoneNumber, education, country, state, hobbies
             });
             setIsHobbiesFetched(true);
 
@@ -55,13 +57,14 @@ const Profile = () => {
 
         console.log(profileForm);
 
-        const {name, surname, phoneNumber, education, country, state, hobbies} = profileForm;
+        const {email, name, surname, phoneNumber, education, country, state, hobbies} = profileForm;
 
-        
+        const rememberMe = true;
         //dispatch({type: "PROFILE_UPDATE", payload: profileForm});
-
+        // userInfo.loginEmail
         const body = {
-            "email": userInfo.loginEmail,
+            "filterEmail": userInfo.loginEmail,
+            "email": email,
             "name": name,
             "surname": surname,
             "phoneNumber": phoneNumber,
@@ -76,6 +79,15 @@ const Profile = () => {
         axios.post('http://localhost:3001/profile-form', body, { headers })
         .then(response => {
             console.log(response);
+
+            if(response.data.isUpdateSuccess) {
+                const storageValues = { isLoggedIn: true, loginEmail: email }
+                dispatch({type: "LOG_IN", payload: storageValues});
+                alert("Successfully Updated!");
+            }
+            else {
+                alert(response.data.errorMessage);
+            }
         })
         .catch(error => {
             console.log("err:",error);
@@ -94,8 +106,17 @@ const Profile = () => {
                         <div className="profile-photo display-1">
                            <i className="bi bi-person"></i>
                         </div>
-                        <span className="font-weight-bold">XXX</span>
-                        <span className="text-black-50">edogaru@mail.com.my</span>
+                        <span className="font-weight-bold">{profileForm.name} {profileForm.surname}</span>
+                        <span className="text-black-50 text-start mt-2">
+                            <label className="labels" htmlFor="email">Email</label>
+                            <input type="text" className="form-control" placeholder="Type your email..." 
+                                name="email"
+                                id="email"
+                                value={profileForm.email} 
+                                onChange={changeProfileForm}
+                                required
+                            />
+                        </span>
                         <span> </span>
                     </div>
                 </div>
@@ -108,30 +129,35 @@ const Profile = () => {
                         </div>
                         <div className="row mt-2">
                             <div className="col-md-6">
-                                <label className="labels">Name</label>
+                                <label className="labels" htmlFor="name">Name</label>
                                 <input type="text" className="form-control" placeholder="Type your name..." 
                                     name="name"
+                                    id="name"
                                     value={profileForm.name} 
-                                    onChange={changeProfileForm}
+                                    onChange={changeProfileForm} 
+                                    required
                                 />
                             </div>
                             <div className="col-md-6">
-                                <label className="labels">Surname</label>
+                                <label className="labels" htmlFor="surname">Surname</label>
                                 <input type="text" className="form-control" placeholder="Type your surname..." 
                                     name="surname"
+                                    id="surname"
                                     value={profileForm.surname} 
-                                    onChange={changeProfileForm}
+                                    onChange={changeProfileForm} 
+                                    required
                                 />
                             </div>
                         </div>
                         <div className="row mt-3">
                             <div className="col-md-12 mb-1">
-                                <label className="labels">Mobile Number</label>
+                                <label className="labels" htmlFor="phoneNumber">Mobile Number</label>
                                 <PhoneInput
                                     inputProps={{
                                         name: 'phoneNumber',
                                         required: true,
-                                        autoFocus: true
+                                        autoFocus: true,
+                                        id: 'phoneNumber'
                                     }}
                                     inputClass="form-control w-100"
                                     placeholder="Enter a phone number..."
@@ -143,9 +169,10 @@ const Profile = () => {
                                 />
                             </div>
                             <div className="col-md-12">
-                                <label className="labels">Education</label>
+                                <label className="labels" htmlFor="education">Education</label>
                                 <select className="form-select"
                                     name="education"
+                                    id="education"
                                     value={profileForm.education} 
                                     onChange={changeProfileForm}
                                     defaultValue=""
@@ -164,9 +191,10 @@ const Profile = () => {
                         </div>
                         <div className="row mt-3">
                             <div className="col-md-6">
-                                <label className="labels">Country</label>
+                                <label className="labels" htmlFor="country">Country</label>
                                 <select className="form-select" 
                                     name="country"
+                                    id="country"
                                     value={profileForm.country} 
                                     onChange={changeProfileForm}
                                     defaultValue=""
@@ -421,9 +449,10 @@ const Profile = () => {
                                 </select>
                             </div>
                             <div className="col-md-6">
-                                <label className="labels">State/Region/City</label>
+                                <label className="labels" htmlFor="state">State/Region/City</label>
                                 <input type="text" className="form-control" placeholder="Type your state, region or city..." 
-                                    name="state"                  
+                                    name="state"      
+                                    id="state"            
                                     value={profileForm.state} 
                                     onChange={changeProfileForm}
                                 />
