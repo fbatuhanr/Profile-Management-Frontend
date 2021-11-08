@@ -28,7 +28,7 @@ const Login = () => {
 
 
         const body = {
-            "user": loginEmail,
+            "email": loginEmail,
             "password": loginPassword
         };
         const headers = { 
@@ -40,6 +40,10 @@ const Login = () => {
             if(response.data.isLoginSuccess) {
                 const storageValues = { isLoggedIn: true, loginEmail, rememberMe }
                 dispatch({type: "LOG_IN", payload: storageValues});
+                alert("Successfully Logged In!");
+            }
+            else {
+                alert(response.data.errorMessage);
             }
         })
         .catch(error => {
