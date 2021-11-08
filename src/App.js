@@ -40,7 +40,7 @@ function App() {
           </Route>
           <Route path="/about" component={About} />
           <Route path="/users" component={Users} />
-          <Route path="/profile" component={Profile} />
+          {userInfo.isLoggedIn && <Route path="/profile" component={Profile} /> }
         </Switch>
       </Content>
       <Footer/>
