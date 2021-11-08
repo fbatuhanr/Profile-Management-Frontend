@@ -35,7 +35,7 @@ const Signup = () => {
             return null;
         }
         
-        const signupEmail = signupForm.signupEmailStart + '@' + signupForm.signupEmailEnd;
+        const signupEmail = signupForm.signupEmailStart+'@'+signupForm.signupEmailEnd;
         const signupPassword = signupForm.signupPassword;
 
         const body = {
@@ -49,9 +49,12 @@ const Signup = () => {
         .then(response => {
             console.log(response);
             if(response.data.isLoginSuccess) {
-                const loginEmail = signupEmail;
-                const storageValues = { isLoggedIn: true, loginEmail }
+                const storageValues = { isLoggedIn: true, loginEmail: signupEmail }
                 dispatch({type: "LOG_IN", payload: storageValues});
+                alert("Successfully Registered!");
+            }
+            else {
+                alert(response.data.errorMessage);
             }
         })
         .catch(error => {
