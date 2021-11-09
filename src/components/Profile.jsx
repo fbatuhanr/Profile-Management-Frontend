@@ -73,6 +73,7 @@ const Profile = () => {
             "state": state,
             "hobbies": hobbies
         };
+        console.log("body:", body);
         const headers = { 
             'Content-Type': 'application/json'
         };
