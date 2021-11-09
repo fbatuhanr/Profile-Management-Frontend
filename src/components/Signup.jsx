@@ -38,12 +38,8 @@ const Signup = () => {
         const signupEmail = signupForm.signupEmailStart+'@'+signupForm.signupEmailEnd;
         const signupPassword = signupForm.signupPassword;
 
-        const body = {
-            "signupEmail": signupEmail,
-            "signupPassword": signupPassword
-        };
-        const headers = { 
-            'Content-Type': 'application/json'
+        const body = { "signupEmail": signupEmail, "signupPassword": signupPassword };
+        const headers = { 'Content-Type': 'application/json'
         };
         axios.post('http://localhost:3001/sign-up', body, { headers })
         .then(response => {
