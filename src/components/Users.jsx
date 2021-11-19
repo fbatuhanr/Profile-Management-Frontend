@@ -1,7 +1,12 @@
-import React, {useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 
 const Users = () => {
+
+    const [users, setUsers] = useState([{
+
+        }
+    ]);
 
     useEffect(() => {
 
@@ -11,7 +16,14 @@ const Users = () => {
         };
         axios.get('http://localhost:3001/users', body, { headers })
         .then(response => {
-            console.log(response);
+            // // console.log(response.data);
+            // console.log(Object.entries(response.data));
+            // setUsers(Object.entries(response.data));
+            console.log(Object.entries(Object.entries(response.data)));
+            setUsers([...users, Object.entries(response.data)]);
+            setTimeout(() => {
+                console.log(users);
+            }, 1000);
         })
         .catch(error => {
             console.log("err:",error);
@@ -27,27 +39,25 @@ const Users = () => {
                         <th scope="col">#</th>
                         <th scope="col">Photo</th>
                         <th scope="col">User</th>
+                        <th scope="col">Name Surname</th>
                         <th scope="col">Country</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td colspan="2">Larry the Bird</td>
-                        <td>@twitter</td>
-                    </tr>
+                    {
+                       users.map((user, inx) => {
+                           <tr>
+                               <th><h1>{user}</h1></th>
+                           </tr>
+                            // <tr>
+                            //     <th scope="row">{inx}</th>
+                            //     <td>Photo</td>
+                            //     <td>{user.email}</td>
+                            //     <td>{user.name} - {user.surname}</td>
+                            //     <td>{user.country}</td>
+                            // </tr>
+                        })
+                    }
                 </tbody>
             </table>
         </div>
