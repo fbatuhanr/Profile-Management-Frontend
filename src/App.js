@@ -39,7 +39,7 @@ function App() {
             { !userInfo.isLoggedIn ? <LoginSignupForms/> : <Profile/> }
           </Route>
           <Route path="/about" component={About} />
-          <Route path="/users" component={Users} />
+          {userInfo.isLoggedIn && <Route path="/users" component={Users} /> }
           {userInfo.isLoggedIn && <Route path="/profile" component={Profile} /> }
         </Switch>
       </Content>
