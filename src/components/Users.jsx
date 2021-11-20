@@ -1,28 +1,29 @@
 import React, {useState, useEffect} from 'react';
+import {useSelector} from 'react-redux';
 import axios from 'axios';
 
 const Users = () => {
 
-    const [users, setUsers] = useState([{
-
-        }
-    ]);
+    const userInfo = useSelector(state => state.user_info);
+    const [users, setUsers] = useState([]);
 
     useEffect(() => {
 
-        const body = {};
-        const headers = { 
-            'Content-Type': 'application/json'
-        };
-        axios.get('http://localhost:3001/users', body, { headers })
+        axios.get('http://localhost:3001/users')
         .then(response => {
             // // console.log(response.data);
             // console.log(Object.entries(response.data));
             // setUsers(Object.entries(response.data));
-            console.log(Object.entries(Object.entries(response.data)));
-            setUsers([...users, Object.entries(response.data)]);
+            // console.log(Object.entries(Object.entries(response.data)));
+            // setUsers([...users, Object.entries(response.data)]);
+            // setTimeout(() => {
+            //     console.log(users);
+            // }, 1000);
+            const responseData = response.data;
+            console.log(responseData);
+            setUsers(responseData);
             setTimeout(() => {
-                console.log(users);
+                console.log("users:",users);
             }, 1000);
         })
         .catch(error => {
@@ -32,8 +33,8 @@ const Users = () => {
     }, []);
 
     return (
-        <div>
-            <table class="table">
+        <div className="mt-4 p-2 bg-white rounded">
+            <table class="table table-hover">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
@@ -43,20 +44,17 @@ const Users = () => {
                         <th scope="col">Country</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody className="align-middle">
                     {
-                       users.map((user, inx) => {
-                           <tr>
-                               <th><h1>{user}</h1></th>
-                           </tr>
-                            // <tr>
-                            //     <th scope="row">{inx}</th>
-                            //     <td>Photo</td>
-                            //     <td>{user.email}</td>
-                            //     <td>{user.name} - {user.surname}</td>
-                            //     <td>{user.country}</td>
-                            // </tr>
-                        })
+                       users && users.map((user,inx) =>
+                            <tr className={user.email == userInfo.loginEmail ? "table-primary" : null}>
+                                <th scope="row" className="pt-3 pb-3 ps-2">{inx+1}</th>
+                                <td>Photo</td>
+                                <td>{user.email}</td>
+                                <td>{user.name} - {user.surname}</td>
+                                <td>{user.country}</td>
+                            </tr>
+                        )
                     }
                 </tbody>
             </table>
