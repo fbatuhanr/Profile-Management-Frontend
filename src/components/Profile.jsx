@@ -7,6 +7,8 @@ import {useSelector, useDispatch} from 'react-redux';
 
 import axios from 'axios';
 
+import Swal from 'sweetalert2';
+
 const Profile = () => {
 
     const userInfo = useSelector(state => state.user_info);
@@ -52,48 +54,80 @@ const Profile = () => {
     const changePhoneNumber = (val) => setProfileForm({...profileForm, "phoneNumber": val});
     const changeHobbies = (val) => setProfileForm({...profileForm, "hobbies": val});
     
+
+    
+
     const profileFormSubmit = (e) => {
         e.preventDefault();
 
-        console.log(profileForm);
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Your profile information will be updated!",
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, update it!'
+          }).then((result) => {
+            if (result.isConfirmed) {
 
-        const {email, name, surname, phoneNumber, education, country, state, hobbies} = profileForm;
+              console.log(profileForm);
 
-        const rememberMe = true;
-        //dispatch({type: "PROFILE_UPDATE", payload: profileForm});
-        // userInfo.loginEmail
-        const body = {
-            "filterEmail": userInfo.loginEmail,
-            "email": email,
-            "name": name,
-            "surname": surname,
-            "phoneNumber": phoneNumber,
-            "education": education,
-            "country": country,
-            "state": state,
-            "hobbies": hobbies
-        };
-        console.log("body:", body);
-        const headers = { 
-            'Content-Type': 'application/json'
-        };
-        axios.post('http://localhost:3001/profile-form', body, { headers })
-        .then(response => {
-            console.log(response);
+              const {email, name, surname, phoneNumber, education, country, state, hobbies} = profileForm;
+      
+              const rememberMe = true;
+              //dispatch({type: "PROFILE_UPDATE", payload: profileForm});
+              // userInfo.loginEmail
+              const body = {
+                  "filterEmail": userInfo.loginEmail,
+                  "email": email,
+                  "name": name,
+                  "surname": surname,
+                  "phoneNumber": phoneNumber,
+                  "education": education,
+                  "country": country,
+                  "state": state,
+                  "hobbies": hobbies
+              };
+              console.log("body:", body);
+              const headers = {'Content-Type': 'application/json'};
+              axios.post('http://localhost:3001/profile-form', body, { headers })
+              .then(response => {
+                  console.log(response);
+      
+                  if(response.data.isUpdateSuccess) {
+                      const storageValues = { isLoggedIn: true, loginEmail: email }
+                      dispatch({type: "LOG_IN", payload: storageValues});
+                      
+                                
+                        Swal.fire(
+                            'Updated!',
+                            'Profile Form Successfully Updated!',
+                            'success'
+                        )
+                  }
+                  else {
 
-            if(response.data.isUpdateSuccess) {
-                const storageValues = { isLoggedIn: true, loginEmail: email }
-                dispatch({type: "LOG_IN", payload: storageValues});
-                alert("Successfully Updated!");
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: response.data.errorMessage,
+                        footer: '<a href="">Why do I have this issue?</a>'
+                      })
+                  }
+              })
+              .catch(error => {
+                  console.log("err:",error);
+
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                    footer: '<a href="">Why do I have this issue?</a>'
+                  })
+              });
             }
-            else {
-                alert(response.data.errorMessage);
-            }
-        })
-        .catch(error => {
-            console.log("err:",error);
-    
-        });
+          })
     }
 
     return (
