@@ -30,6 +30,7 @@ function App() {
   const allInfo = useSelector(state => state);
 
   console.log(allInfo);
+  
   return (
     <Router>
       <Header />
