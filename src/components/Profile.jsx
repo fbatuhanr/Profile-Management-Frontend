@@ -130,18 +130,32 @@ const Profile = () => {
           })
     }
 
+    const changeProfilePhoto = (e) => {
+        const headers = {'Content-Type': 'application/json'};
+       
+        console.log(e.target.files[0]);
+        axios.post('http://localhost:3001/image', e.target.files[0], { headers })
+        .then(response => {
+            console.log(response);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    }
+
     return (
        <div className="profile rounded bg-white mt-3 mb-3">
 
-       <form id="profileForm" onSubmit={profileFormSubmit} method="POST">
+       <form id="profileForm" onSubmit={profileFormSubmit} method="POST" enctype="multipart/form-data">
            <div className="row">
 
                 <div className="col-md-3 border-end">
                     <div className="d-flex flex-column align-items-center text-center p-3 py-5">
-                        <div className="profile-photo display-1">
-                           <i className="bi bi-person"></i>
+                        <div className="profile-photo">
+                           <i className="bi bi-person display-1"></i>
                         </div>
                         <span className="font-weight-bold">{profileForm.name} {profileForm.surname}</span>
+                            <input type="file" id="image" name="image" value="" onChange={changeProfilePhoto} required />
                         <span className="text-black-50 text-start mt-2">
                             <label className="labels" htmlFor="email">Email</label>
                             <input type="text" className="form-control" placeholder="Type your email..." 
