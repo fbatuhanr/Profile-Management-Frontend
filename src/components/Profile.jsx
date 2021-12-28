@@ -131,10 +131,12 @@ const Profile = () => {
     }
 
     const changeProfilePhoto = (e) => {
-        const headers = {'Content-Type': 'application/json'};
+
+      const formData = new FormData();
+      formData.append('image', e.target.files[0]);
        
         console.log(e.target.files[0]);
-        axios.post('http://localhost:3001/image', e.target.files[0], { headers })
+        axios.post('http://localhost:3001/image-upload', formData)
         .then(response => {
             console.log(response);
         })
@@ -155,7 +157,7 @@ const Profile = () => {
                            <i className="bi bi-person display-1"></i>
                         </div>
                         <span className="font-weight-bold">{profileForm.name} {profileForm.surname}</span>
-                            <input type="file" id="image" name="image" value="" onChange={changeProfilePhoto} required />
+                            <input type="file" id="file" name="file" value="" onChange={changeProfilePhoto}  accept="image/*" required/>
                         <span className="text-black-50 text-start mt-2">
                             <label className="labels" htmlFor="email">Email</label>
                             <input type="text" className="form-control" placeholder="Type your email..." 
