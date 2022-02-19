@@ -29,6 +29,8 @@ const Profile = () => {
         hobbies: []
     });
 
+    const [profilePhoto, setProfilePhoto] = useState(null);
+
     
     useEffect(() => {
 
@@ -44,6 +46,31 @@ const Profile = () => {
             });
             setIsHobbiesFetched(true);
 
+        })
+        .catch(error => {
+            console.error('There was an error!', error);
+        });
+    }, []);
+
+                    
+    useEffect(() => {
+
+        axios.get('http://localhost:3001/image')
+        .then(response => {
+            console.log("axios image get!:", response);
+
+            const img = response.data.items[0];
+            const imgData = img.img;
+
+            const imgContentType = imgData.contentType;
+            const binaryImgData = imgData.data.data;
+
+            console.log("type:", imgContentType);
+            console.log("binary data: ", binaryImgData);
+            
+            setProfilePhoto(`data:${imgContentType};base64, ${Buffer.from(binaryImgData).toString('base64')}`);
+
+            console.log(profilePhoto);
         })
         .catch(error => {
             console.error('There was an error!', error);
@@ -154,7 +181,11 @@ const Profile = () => {
                 <div className="col-md-3 border-end">
                     <div className="d-flex flex-column align-items-center text-center p-3 py-5">
                         <div className="profile-photo">
-                           <i className="bi bi-person display-1"></i>
+                            {   
+                                profilePhoto 
+                                ? <img src={profilePhoto} width="100%" alt="" /> 
+                                : <i className="bi bi-person display-1"></i> 
+                            }
                         </div>
                         <span className="font-weight-bold">{profileForm.name} {profileForm.surname}</span>
                             <input type="file" id="file" name="file" value="" onChange={changeProfilePhoto}  accept="image/*" required/>
