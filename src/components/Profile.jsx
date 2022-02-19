@@ -34,6 +34,30 @@ const Profile = () => {
     
     useEffect(() => {
 
+        axios.get('http://localhost:3001/image', { params: { filterEmail: userInfo.loginEmail } })
+        .then(response => {
+            console.log("axios image get!:", response);
+
+            if(response.data){
+
+                const img = response.data;
+                const imgData = img.img;
+    
+                const imgContentType = imgData.contentType;
+                const binaryImgData = imgData.data.data;
+    
+                console.log("type:", imgContentType);
+                console.log("binary data: ", binaryImgData);
+                
+                setProfilePhoto(`data:${imgContentType};base64, ${Buffer.from(binaryImgData).toString('base64')}`);
+    
+                console.log(profilePhoto);
+            }
+        })
+        .catch(error => {
+            console.error('There was an error (Axios get profile image)!', error);
+        });
+
         axios.get('http://localhost:3001/profile-form', { params: { email: userInfo.loginEmail } })
         .then(response => {
             console.log("axios get!:", response)
@@ -48,33 +72,13 @@ const Profile = () => {
 
         })
         .catch(error => {
-            console.error('There was an error!', error);
+            console.error('There was an error (Axios get form data)!', error);
         });
     }, []);
 
-                    
+
     useEffect(() => {
 
-        axios.get('http://localhost:3001/image')
-        .then(response => {
-            console.log("axios image get!:", response);
-
-            const img = response.data.items[0];
-            const imgData = img.img;
-
-            const imgContentType = imgData.contentType;
-            const binaryImgData = imgData.data.data;
-
-            console.log("type:", imgContentType);
-            console.log("binary data: ", binaryImgData);
-            
-            setProfilePhoto(`data:${imgContentType};base64, ${Buffer.from(binaryImgData).toString('base64')}`);
-
-            console.log(profilePhoto);
-        })
-        .catch(error => {
-            console.error('There was an error!', error);
-        });
     }, []);
 
     const changeProfileForm = (e) => setProfileForm({...profileForm, [e.target.name]: e.target.value});
@@ -160,15 +164,32 @@ const Profile = () => {
     const changeProfilePhoto = (e) => {
 
       const formData = new FormData();
+      formData.append('filterEmail', userInfo.loginEmail);
       formData.append('image', e.target.files[0]);
-       
+
         console.log(e.target.files[0]);
-        axios.post('http://localhost:3001/image-upload', formData)
+
+        const headers = {'Content-Type': 'multipart/form-data'};
+        axios.post('http://localhost:3001/image-upload', formData, { headers })
         .then(response => {
             console.log(response);
+
+            Swal.fire(
+                'Updated!',
+                'Your Profile Photo Successfully Updated!',
+                'success'
+            )
         })
         .catch(error => {
+
             console.error(error);
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+                footer: '<a href="#">Why do I have this issue?</a>'
+              })
         });
     }
 
@@ -178,28 +199,40 @@ const Profile = () => {
        <form id="profileForm" onSubmit={profileFormSubmit} method="POST" enctype="multipart/form-data">
            <div className="row">
 
-                <div className="col-md-3 border-end">
-                    <div className="d-flex flex-column align-items-center text-center p-3 py-5">
-                        <div className="profile-photo">
-                            {   
-                                profilePhoto 
-                                ? <img src={profilePhoto} width="100%" alt="" /> 
-                                : <i className="bi bi-person display-1"></i> 
-                            }
+                <div className="col-md-3 pe-0 border-end">
+                    <div className="p-3 py-5">
+                        <div className="row">
+                            <div className="profile-photo col-md-12 text-center">
+                                {   
+                                    profilePhoto 
+                                    ? <img src={profilePhoto} width="100%" className="w-50 mx-auto d-block border border-1 border-success rounded-circle" alt="" /> 
+                                    : <i className="bi bi-person display-1 d-block"></i> 
+                                }
+                                <span className="font-weight-bold">{profileForm.name} {profileForm.surname}</span>
+                            </div>
                         </div>
-                        <span className="font-weight-bold">{profileForm.name} {profileForm.surname}</span>
-                            <input type="file" id="file" name="file" value="" onChange={changeProfilePhoto}  accept="image/*" required/>
-                        <span className="text-black-50 text-start mt-2">
-                            <label className="labels" htmlFor="email">Email</label>
-                            <input type="text" className="form-control" placeholder="Type your email..." 
-                                name="email"
-                                id="email"
-                                value={profileForm.email} 
-                                onChange={changeProfileForm}
-                                required
-                            />
-                        </span>
-                        <span> </span>
+
+                        <div className="row mt-2">
+                            <div className="upload-profile-photo col-md-12 text-center">      
+                                <label htmlFor="file" className="border border-2 rounded ps-2 pe-2 p-1 btn-success">Change Image</label>
+                                <input type="file" id="file" name="file" className="w-100 d-none" value="" onChange={changeProfilePhoto}  accept="image/*" required/>
+                            </div>
+                        </div>
+                        <div className="row mt-4">
+                            <div className="email col-md-12">
+                                <span className="text-black-50 text-start">
+                                    <label className="labels" htmlFor="email">Email</label>
+                                    <input type="text" className="form-control" placeholder="Type your email..." 
+                                        name="email"
+                                        id="email"
+                                        value={profileForm.email} 
+                                        onChange={changeProfileForm}
+                                        required
+                                    />
+                                </span>
+                                <span> </span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -562,7 +595,7 @@ const Profile = () => {
                 </div>
 
            </div>
-                </form>
+        </form>
        </div> 
     )
 }
