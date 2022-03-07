@@ -12,10 +12,12 @@ import Swal from 'sweetalert2';
 const Profile = () => {
 
     const userInfo = useSelector(state => state.user_info);
+    const dispatch = useDispatch();
+
+
+    const [isProfilePhotoLoaded, setIsProfilePhotoLoaded] = useState(false);
 
     const [isHobbiesFetched, setIsHobbiesFetched] = useState(false);
-
-    const dispatch = useDispatch();
 
     const [profileForm, setProfileForm] = useState({
         email: "",
@@ -32,7 +34,7 @@ const Profile = () => {
     const [profilePhoto, setProfilePhoto] = useState(null);
 
     
-    useEffect(() => {
+    const fetchProfilePhoto = () => {
 
         axios.get('http://localhost:3001/image', { params: { filterEmail: userInfo.loginEmail } })
         .then(response => {
@@ -50,6 +52,7 @@ const Profile = () => {
                 console.log("binary data: ", binaryImgData);
                 
                 setProfilePhoto(`data:${imgContentType};base64, ${Buffer.from(binaryImgData).toString('base64')}`);
+                setIsProfilePhotoLoaded(true);
     
                 console.log(profilePhoto);
             }
@@ -57,6 +60,8 @@ const Profile = () => {
         .catch(error => {
             console.error('There was an error (Axios get profile image)!', error);
         });
+    }
+    const fetchProfileData = () => {
 
         axios.get('http://localhost:3001/profile-form', { params: { email: userInfo.loginEmail } })
         .then(response => {
@@ -74,12 +79,14 @@ const Profile = () => {
         .catch(error => {
             console.error('There was an error (Axios get form data)!', error);
         });
-    }, []);
-
+    }
 
     useEffect(() => {
 
+        fetchProfilePhoto();
+        fetchProfileData();
     }, []);
+
 
     const changeProfileForm = (e) => setProfileForm({...profileForm, [e.target.name]: e.target.value});
     const changePhoneNumber = (val) => setProfileForm({...profileForm, "phoneNumber": val});
@@ -136,6 +143,7 @@ const Profile = () => {
                             'Profile Form Successfully Updated!',
                             'success'
                         )
+            
                   }
                   else {
 
@@ -163,6 +171,8 @@ const Profile = () => {
 
     const changeProfilePhoto = (e) => {
 
+        setIsProfilePhotoLoaded(false);
+
       const formData = new FormData();
       formData.append('filterEmail', userInfo.loginEmail);
       formData.append('image', e.target.files[0]);
@@ -179,6 +189,8 @@ const Profile = () => {
                 'Your Profile Photo Successfully Updated!',
                 'success'
             )
+
+            fetchProfilePhoto();
         })
         .catch(error => {
 
@@ -203,10 +215,10 @@ const Profile = () => {
                     <div className="p-3 py-5">
                         <div className="row">
                             <div className="profile-photo col-md-12 text-center">
-                                {   
-                                    profilePhoto 
-                                    ? <img src={profilePhoto} width="100%" className="w-50 mx-auto d-block border border-1 border-success rounded-circle" alt="" /> 
-                                    : <i className="bi bi-person display-1 d-block"></i> 
+                                { 
+                                    isProfilePhotoLoaded ?  
+                                    profilePhoto ? <img src={profilePhoto} width="100%" className="w-50 mx-auto d-block border border-1 border-success rounded-circle" alt="" /> : <i className="bi bi-person display-1 d-block"></i> 
+                                    : <div class="profilephoto-loading-spinner p-5 text-center"><div class="spinner-grow text-success" style={{width:'4rem', height:'4rem'}} role="status"><span class="sr-only"></span></div></div>
                                 }
                                 <span className="font-weight-bold">{profileForm.name} {profileForm.surname}</span>
                             </div>
@@ -215,7 +227,7 @@ const Profile = () => {
                         <div className="row mt-2">
                             <div className="upload-profile-photo col-md-12 text-center">      
                                 <label htmlFor="file" className="border border-2 rounded ps-2 pe-2 p-1 btn-success">Change Image</label>
-                                <input type="file" id="file" name="file" className="w-100 d-none" value="" onChange={changeProfilePhoto}  accept="image/*" required/>
+                                <input type="file" id="file" name="file" className="w-100 d-none" value="" onChange={changeProfilePhoto}  accept="image/*" />
                             </div>
                         </div>
                         <div className="row mt-4">

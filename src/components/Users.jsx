@@ -1,58 +1,46 @@
-import React, {useState, useEffect} from 'react';
-import {useSelector} from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 
 const Users = () => {
 
     const userInfo = useSelector(state => state.user_info);
+
+    const [isUsersLoaded, setIsUsersLoaded] = useState(false);
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
 
         axios.get('http://localhost:3001/users')
-        .then(response => {
-            // // console.log(response.data);
-            // console.log(Object.entries(response.data));
-            // setUsers(Object.entries(response.data));
-            // console.log(Object.entries(Object.entries(response.data)));
-            // setUsers([...users, Object.entries(response.data)]);
-            // setTimeout(() => {
-            //     console.log(users);
-            // }, 1000);
-            const responseData = response.data;
+            .then(response => {
+                // // console.log(response.data);
+                // console.log(Object.entries(response.data));
+                // setUsers(Object.entries(response.data));
+                // console.log(Object.entries(Object.entries(response.data)));
+                // setUsers([...users, Object.entries(response.data)]);
+                // setTimeout(() => {
+                //     console.log(users);
+                // }, 1000);
+                const responseData = response.data;
+                setUsers(responseData);
 
+                setIsUsersLoaded(true);
 
-            const imgData = responseData.img;
-
-            console.log(imgData)
-
-            // const imgContentType = imgData.contentType;
-            // const binaryImgData = imgData.data.data;
-
-            // console.log("type:", imgContentType);
-            // console.log("binary data: ", binaryImgData);
-
-            // const profilePhotoUrl = (`data:${imgContentType};base64, ${Buffer.from(binaryImgData).toString('base64')}`);
-
-            // responseData.img = profilePhotoUrl;
-
-            // console.log(responseData);
-            // setUsers(responseData);
-
-
-            // setTimeout(() => {
-            //     console.log("users:",users);
-            // }, 1000);
-        })
-        .catch(error => {
-            console.log("err:",error);
-        });
+                setTimeout(() => {
+                    console.log("users:", users);
+                }, 2000);
+            })
+            .catch(error => {
+                console.log("err:", error);
+            });
 
     }, []);
 
     return (
         <div className="mt-4 p-2 bg-white rounded">
-            <table className="table table-hover">
+            {
+                isUsersLoaded ?  
+                <table className="table table-hover">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
@@ -66,8 +54,8 @@ const Users = () => {
                     {
                        users && users.map((user,inx) =>
                             <tr className={user.email == userInfo.loginEmail ? "table-primary" : null}>
-                                <th scope="row" className="pt-3 pb-3 ps-2">{inx+1}</th>
-                                <td>Photo</td>
+                                <th key={inx} scope="row" className="pt-3 pb-3 ps-2">{inx+1}</th>
+                                <td>{user.img && <img src={(`data:${user.img.contentType};base64, ${Buffer.from(user.img.data.data).toString('base64')}`)} width="auto" height="75px" className="d-block border border-1 border-success rounded-circle" alt="" />}</td>
                                 <td>{user.email}</td>
                                 <td>{user.name} - {user.surname}</td>
                                 <td>{user.country}</td>
@@ -75,8 +63,11 @@ const Users = () => {
                         )
                     }
                 </tbody>
-            </table>
-        </div>
+                </table>
+                : 
+                <div class="loading-spinner p-5 text-center"><div class="spinner-border text-success" style={{width:'4rem', height:'4rem'}} role="status"><span class="sr-only"></span></div></div>
+            }
+        </div >
     )
 }
 export default Users;
