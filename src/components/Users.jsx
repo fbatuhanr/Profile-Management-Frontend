@@ -20,11 +20,29 @@ const Users = () => {
             //     console.log(users);
             // }, 1000);
             const responseData = response.data;
-            console.log(responseData);
-            setUsers(responseData);
-            setTimeout(() => {
-                console.log("users:",users);
-            }, 1000);
+
+
+            const imgData = responseData.img;
+
+            console.log(imgData)
+
+            // const imgContentType = imgData.contentType;
+            // const binaryImgData = imgData.data.data;
+
+            // console.log("type:", imgContentType);
+            // console.log("binary data: ", binaryImgData);
+
+            // const profilePhotoUrl = (`data:${imgContentType};base64, ${Buffer.from(binaryImgData).toString('base64')}`);
+
+            // responseData.img = profilePhotoUrl;
+
+            // console.log(responseData);
+            // setUsers(responseData);
+
+
+            // setTimeout(() => {
+            //     console.log("users:",users);
+            // }, 1000);
         })
         .catch(error => {
             console.log("err:",error);
@@ -34,7 +52,7 @@ const Users = () => {
 
     return (
         <div className="mt-4 p-2 bg-white rounded">
-            <table class="table table-hover">
+            <table className="table table-hover">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
