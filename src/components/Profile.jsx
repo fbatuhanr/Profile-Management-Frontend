@@ -9,6 +9,9 @@ import axios from 'axios';
 
 import Swal from 'sweetalert2';
 
+import { Buffer } from 'buffer';
+
+
 const Profile = () => {
 
     const userInfo = useSelector(state => state.user_info);

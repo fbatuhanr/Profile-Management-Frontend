@@ -37,8 +37,7 @@ const Header = () => {
                                     </ul>
                                 </li>
                                 <li className="nav-item">
-                                    <button className="btn btn-danger" 
-                                    onClick={() => dispatch({type: "LOG_OUT"})}>Logout!</button>
+                                    <Link to="/" className="btn btn-danger nav-link" onClick={() => dispatch({type: "LOG_OUT"})}>Logout!</Link>
                                 </li>
                             </>
                             : null

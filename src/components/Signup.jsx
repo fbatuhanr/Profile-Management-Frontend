@@ -3,6 +3,8 @@ import {useDispatch} from 'react-redux';
 
 import axios from 'axios';
 
+import Swal from 'sweetalert2';
+
 const Signup = () => {
 
     const dispatch = useDispatch();
@@ -13,6 +15,39 @@ const Signup = () => {
         signupPassword: "",
         signupPasswordAgain: ""
     })
+
+    const userSignupSuccess = (message, storageValues) => {
+
+        let timerInterval
+        Swal.fire({
+            icon: 'success',
+            title: message,
+            html: 'You are being redirected in <b></b> milliseconds.',
+            timer: 2000,
+            timerProgressBar: true,
+            didOpen: () => {
+                Swal.showLoading()
+                const b = Swal.getHtmlContainer().querySelector('b')
+                timerInterval = setInterval(() => {
+                    b.textContent = Swal.getTimerLeft()
+                }, 100)
+            },
+            willClose: () => {
+                clearInterval(timerInterval)
+            }
+        }).then((result) => {
+            if (result.dismiss === Swal.DismissReason.timer)
+                dispatch({type: "LOG_IN", payload: storageValues});
+        })
+    }
+    const userSignupFailure = message => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: message,
+            footer: '<a href="">Why do I have this issue?</a>'
+        })
+    }
 
 
     const inputChange = (e) => {
@@ -31,7 +66,7 @@ const Signup = () => {
         // console.log(signupForm.signupPasswordAgain);
 
         if(signupForm.signupPassword != signupForm.signupPasswordAgain) {
-            alert("Passwords do not match!");
+            userSignupFailure("Passwords do not match!");
             return null;
         }
         
@@ -43,19 +78,15 @@ const Signup = () => {
         };
         axios.post('http://localhost:3001/sign-up', body, { headers })
         .then(response => {
-            console.log(response);
             if(response.data.isLoginSuccess) {
-                const storageValues = { isLoggedIn: true, loginEmail: signupEmail }
-                dispatch({type: "LOG_IN", payload: storageValues});
-                alert("Successfully Registered!");
+                userSignupSuccess(response.data.successMessage, {isLoggedIn: true, loginEmail: signupEmail, rememberMe: false});
             }
             else {
-                alert(response.data.errorMessage);
+                userSignupFailure(response.data.errorMessage);
             }
         })
         .catch(error => {
-            console.log("err:",error);
-    
+            console.log("Axios Post Error: ",error);
         });
     }
 

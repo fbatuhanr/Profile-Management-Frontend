@@ -67,7 +67,7 @@ const Login = () => {
         .then(response => {
             console.log(response);
             if(response.data.isLoginSuccess)
-                userLoginSuccess(response.data.successMessage, {isLoggedIn: true, loginEmail, rememberMe});
+                userLoginSuccess(response.data.successMessage, {isLoggedIn: true, loginEmail: loginEmail, rememberMe: rememberMe});
             else
                 userLoginFailure(response.data.errorMessage);
         })
