@@ -17,3 +17,9 @@ Back-end:
 <a href="https://mongoosejs.com/" target="_blank">Mongoose</a>
 
 ### Backend URL: <a target='_blank' href='https://github.com/fbatuhanr/Profile-Management-Backend'>https://github.com/fbatuhanr/Profile-Management-Backend</a>
+
+<br/>
+
+
+https://github.com/fbatuhanr/Profile-Management-Frontend/assets/34348780/b7a84285-4f4c-4a9a-a4d3-20f294a56fe3
+
